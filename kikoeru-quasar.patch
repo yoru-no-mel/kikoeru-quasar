@@ -1,0 +1,1390 @@
+diff --git a/src-pwa/register-service-worker.js b/src-pwa/register-service-worker.js
+index 0b2616d..a8b896d 100644
+--- a/src-pwa/register-service-worker.js
++++ b/src-pwa/register-service-worker.js
+@@ -32,12 +32,12 @@ register(process.env.SERVICE_WORKER_FILE, {
+   updated (/* registration */) {
+     console.log('New content is available; please refresh.')
+     Notify.create({
+-      message: '版本已更新',
++      message: 'Version Updated',
+       color: 'primary',
+       textColor: 'white',
+       icon: 'cached',
+       actions: [
+-        { label: '刷新', color: 'white' }
++        { label: 'Refresh', color: 'white' }
+       ],
+       timeout: 10000,
+       onDismiss () {
+diff --git a/src/components/AudioPlayer.vue b/src/components/AudioPlayer.vue
+index fab3767..de0a84d 100644
+--- a/src/components/AudioPlayer.vue
++++ b/src/components/AudioPlayer.vue
+@@ -145,7 +145,7 @@
+           @click="showCurrentPlayList = !showCurrentPlayList"
+           class="q-ma-sm"
+         >
+-          <q-tooltip>打开当前播放列表</q-tooltip>
++          <q-tooltip>Open playlist</q-tooltip>
+         </q-btn>
+         <!-- 播放模式 -->
+         <q-btn
+@@ -157,7 +157,7 @@
+           @click="changePlayMode()"
+           class="q-ma-sm"
+         >
+-          <q-tooltip>播放模式: {{ this.playModeName() }}</q-tooltip>
++          <q-tooltip>{{ this.playModeName() }}</q-tooltip>
+         </q-btn>
+         <!-- 打开作品详情 -->
+         <q-btn
+@@ -169,7 +169,7 @@
+           @click="openWorkDetail()"
+           class="q-ma-sm"
+         >
+-          <q-tooltip>打开作品详情</q-tooltip>
++          <q-tooltip>Open work details</q-tooltip>
+         </q-btn>
+       </div>
+     </q-card>
+@@ -509,13 +509,13 @@ export default {
+     playModeName() {
+       switch (this.playMode.name) {
+         case "order":
+-          return "顺序播放";
++          return "Normal";
+         case "all repeat":
+-          return "列表循环";
++          return "Repeat";
+         case "repeat once":
+-          return "单曲循环";
++          return "Repeat Once";
+         case "shuffle":
+-          return "随机播放";
++          return "Shuffle";
+       }
+     },
+ 
+diff --git a/src/components/FavListItem.vue b/src/components/FavListItem.vue
+index 7eb289b..decccd6 100644
+--- a/src/components/FavListItem.vue
++++ b/src/components/FavListItem.vue
+@@ -45,11 +45,11 @@
+       <q-item-label class="q-pt-xs" v-if="mode === 'progress'">
+         <q-btn-toggle v-if="mode === 'progress'" v-model="progress" @input="setProgress" dense no-caps rounded
+           toggle-color="primary" color="white" text-color="black" :options="[
+-            { label: '想听', value: 'marked' },
+-            { label: '在听', value: 'listening' },
+-            { label: '听过', value: 'listened' },
+-            { label: '重听', value: 'replay' },
+-            { label: '搁置', value: 'postponed' }
++          { label: 'Plan to Listen', value: 'marked' },
++          { label: 'Listening', value: 'listening' },
++          { label: 'Completed', value: 'listened' },
++          { label: 'Replaying', value: 'replay' },
++          { label: 'Postponed', value: 'postponed' }
+           ]" />
+       </q-item-label>
+     </q-item-section>
+diff --git a/src/components/MediaViewer.vue b/src/components/MediaViewer.vue
+index 73e004a..435179c 100644
+--- a/src/components/MediaViewer.vue
++++ b/src/components/MediaViewer.vue
+@@ -8,19 +8,19 @@
+             <q-tooltip>
+               <div class="text-subtitle2">
+                 <q-icon dense name="auto_awesome_motion" />
+-                显示缩略图
++                Show thumbnails
+               </div>
+               <div class="text-subtitle2">
+                 <q-icon name="pageview" />
+-                新页面查看
++                Open in new window
+               </div>
+               <div class="text-subtitle2">
+                 <q-icon name="download" />
+-                下载文件
++                Download
+               </div>
+               <div class="text-subtitle2">
+                 <q-icon name="open_in_full" />
+-                全屏幕显示
++                Fullscreen
+               </div>
+             </q-tooltip>
+           </q-btn>
+diff --git a/src/components/SleepMode.vue b/src/components/SleepMode.vue
+index 2cfa69a..70f0417 100644
+--- a/src/components/SleepMode.vue
++++ b/src/components/SleepMode.vue
+@@ -10,12 +10,12 @@
+ 
+         <div class="row justify-between">
+           <q-card-actions>
+-            <q-btn flat label="取消定时" color="primary" @click="clearSleepTimer" :disable="!sleepMode" v-close-popup />
++            <q-btn flat label="Cancel Scheduled" color="primary" @click="clearSleepTimer" :disable="!sleepMode" v-close-popup />
+           </q-card-actions>
+ 
+           <q-card-actions align="right">
+-            <q-btn flat label="取消" color="primary" v-close-popup />
+-            <q-btn flat label="确定" color="primary" @click="setSleepTimer" v-close-popup />
++            <q-btn flat label="Cancel" color="primary" v-close-popup />
++            <q-btn flat label="OK" color="primary" @click="setSleepTimer" v-close-popup />
+           </q-card-actions>
+         </div>
+ 
+@@ -85,7 +85,7 @@ export default {
+       } catch {
+         console.log('Web Storage API error');
+       }
+-      this.showSuccNotif(`将于${this.time}停止播放`);
++      this.showSuccNotif(`Will stop playing at ${this.time}`);
+     },
+ 
+     clearSleepTimer() {
+@@ -96,7 +96,7 @@ export default {
+       } catch {
+         console.log('Web Storage API error');
+       }
+-      this.showSuccNotif('已关闭睡眠模式');
++      this.showSuccNotif('Sleep mode has been turned off');
+     },
+ 
+     showSuccNotif (message) {
+diff --git a/src/components/WorkCard.vue b/src/components/WorkCard.vue
+index 21a7659..aa34db3 100644
+--- a/src/components/WorkCard.vue
++++ b/src/components/WorkCard.vue
+@@ -36,9 +36,9 @@
+ 
+           <!-- 评价分布明细 -->
+           <q-tooltip v-if="metadata.rate_count_detail" content-class="text-subtitle1">
+-            <div>平均: {{ metadata.rate_average_2dp }}</div>
++            <div>Average: {{ metadata.rate_average_2dp }}</div>
+             <div v-for="(rate, index) in sortedRatings" :key="index" class="row items-center">
+-              <div class="col">{{ rate.review_point }}星</div>
++              <div class="col">{{ rate.review_point }}</div>
+ 
+               <!-- 评价占比 -->
+               <q-linear-progress
+@@ -88,7 +88,7 @@
+       <!-- 价格&售出数 -->
+       <div v-show="metadata.title">
+         <span class="q-mx-sm text-weight-medium text-h6 text-red">{{ metadata.price }} 円</span>
+-        <span>售出数: {{ metadata.dl_count }}</span>
++        <span>Sales: {{ metadata.dl_count }}</span>
+         <q-chip
+           v-if="!metadata.nsfw"
+           dense
+@@ -98,7 +98,7 @@
+           class="q-py-sm text-green"
+           style="margin-top: 0px;"
+         >
+-          全年龄
++          All-ages
+         </q-chip>
+         <q-chip
+           v-if="metadata.lyric_status"
+@@ -109,7 +109,7 @@
+           class="q-py-sm text-blue"
+           style="margin-top: 0px;"
+         >
+-          带字幕
++          Translated
+         </q-chip>
+       </div>
+ 
+diff --git a/src/components/WorkDetails.vue b/src/components/WorkDetails.vue
+index b22a969..b03b7b3 100644
+--- a/src/components/WorkDetails.vue
++++ b/src/components/WorkDetails.vue
+@@ -1,10 +1,14 @@
+ <template>
+-  <div>
+-    <router-link :to="`/work/RJ${metadata.id}`">
+-      <CoverSFW :workid="metadata.id" :nsfw="false" :release="metadata.release" />
+-    </router-link>
+-
+-    <div class="q-pa-sm">
++  <div class="row q-ma-md">
++    <CoverSFW
++      class="col-12 col-md-4 q-pl-md-md q-pt-md-md content-center"
++      :workid="metadata.id"
++      :nsfw="false"
++      :release="metadata.release"
++      style="border-radius: 8px; overflow: hidden; max-width: 560px;"
++    />
++
++    <div class="col-md-6 col-12 q-pa-sm">
+       <div class="q-px-sm q-py-none">
+         <!-- 标题 -->
+         <div class="text-h6 text-weight-regular">
+@@ -46,9 +50,9 @@
+ 
+             <!-- 评价分布明细 -->
+             <q-tooltip v-if="metadata.rate_count_detail" content-class="text-subtitle1">
+-              <div>平均: {{ metadata.rate_average_2dp }}</div>
++              <div>Average: {{ metadata.rate_average_2dp }}</div>
+               <div v-for="(rate, index) in sortedRatings" :key="index" class="row items-center">
+-                <div class="col">{{ rate.review_point }}星</div>
++                <div class="col">{{ rate.review_point }}</div>
+ 
+                 <!-- 评价占比 -->
+                 <q-linear-progress
+@@ -99,7 +103,7 @@
+       <!-- 价格&售出数 -->
+       <div class="q-pt-sm q-pb-none">
+         <span class="q-mx-sm text-weight-medium text-h6 text-red">{{ metadata.price }} 円</span>
+-        售出数:
++        Sales:
+         {{ metadata.dl_count }}
+       </div>
+ 
+@@ -135,14 +139,14 @@
+         </q-chip>
+       </div>
+ 
+-      <q-btn-dropdown dense class="q-mt-sm shadow-4 q-mx-xs q-pl-sm" color="cyan" label="标记进度">
++      <q-btn-dropdown dense class="q-mt-sm shadow-4 q-mx-xs q-pl-sm" color="cyan" label="Progress">
+         <q-list>
+           <q-item clickable @click="setProgress('marked')" class="q-pa-xs">
+             <q-item-section avatar>
+               <q-avatar icon="headset" v-show="progress === 'marked'" />
+             </q-item-section>
+             <q-item-section>
+-              <q-item-label>想听</q-item-label>
++              <q-item-label>Plan to Listen</q-item-label>
+             </q-item-section>
+           </q-item>
+ 
+@@ -151,7 +155,7 @@
+               <q-avatar icon="headset" v-show="progress === 'listening'" />
+             </q-item-section>
+             <q-item-section>
+-              <q-item-label>在听</q-item-label>
++              <q-item-label>Listening</q-item-label>
+             </q-item-section>
+           </q-item>
+           <q-item clickable @click="setProgress('listened')" class="q-pa-xs">
+@@ -159,7 +163,7 @@
+               <q-avatar icon="headset" v-show="progress === 'listened'" />
+             </q-item-section>
+             <q-item-section>
+-              <q-item-label>听过</q-item-label>
++              <q-item-label>Completed</q-item-label>
+             </q-item-section>
+           </q-item>
+           <q-item clickable @click="setProgress('replay')" class="q-pa-xs">
+@@ -167,7 +171,7 @@
+               <q-avatar icon="headset" v-show="progress === 'replay'" />
+             </q-item-section>
+             <q-item-section>
+-              <q-item-label>重听</q-item-label>
++              <q-item-label>Replaying</q-item-label>
+             </q-item-section>
+           </q-item>
+           <q-item clickable @click="setProgress('postponed')" class="q-pa-xs">
+@@ -175,13 +179,13 @@
+               <q-avatar icon="headset" v-show="progress === 'postponed'" />
+             </q-item-section>
+             <q-item-section>
+-              <q-item-label>搁置</q-item-label>
++              <q-item-label>Postponed</q-item-label>
+             </q-item-section>
+           </q-item>
+         </q-list>
+       </q-btn-dropdown>
+ 
+-      <q-btn dense @click="showReviewDialog = true" color="cyan q-mt-sm shadow-4 q-mx-xs q-px-sm" label="写评论" />
++      <q-btn dense @click="showReviewDialog = true" color="cyan q-mt-sm shadow-4 q-mx-xs q-px-sm" label="Write a review" />
+ 
+       <WriteReview
+         v-if="showReviewDialog"
+diff --git a/src/components/WorkTree.vue b/src/components/WorkTree.vue
+index a7dd9dd..519acf9 100644
+--- a/src/components/WorkTree.vue
++++ b/src/components/WorkTree.vue
+@@ -44,7 +44,7 @@
+ 
+           <q-item-section>
+             <q-item-label lines="2">{{ item.title }}</q-item-label>
+-            <q-item-label v-if="item.children" caption lines="1">{{ `${item.children.length} 项目` }}</q-item-label>
++            <q-item-label v-if="item.children" caption lines="1">{{ `${item.children.length} items` }}</q-item-label>
+ 
+             <!-- 媒体文件时长 -->
+             <q-item-label
+@@ -68,15 +68,15 @@
+           >
+             <q-list separator>
+               <q-item clickable @click="addToQueue(item)" v-if="item.type === 'audio'">
+-                <q-item-section>添加到播放列表</q-item-section>
++                <q-item-section>Add to playlist</q-item-section>
+               </q-item>
+ 
+               <q-item clickable @click="playNext(item)" v-if="item.type === 'audio'">
+-                <q-item-section>下一曲播放</q-item-section>
++                <q-item-section>Play next</q-item-section>
+               </q-item>
+ 
+               <q-item clickable @click="download(item)">
+-                <q-item-section>下载文件</q-item-section>
++                <q-item-section>Download file</q-item-section>
+               </q-item>
+             </q-list>
+           </q-menu>
+diff --git a/src/components/WriteReview.vue b/src/components/WriteReview.vue
+index 438d9f4..1773a55 100644
+--- a/src/components/WriteReview.vue
++++ b/src/components/WriteReview.vue
+@@ -3,7 +3,7 @@
+       <q-dialog v-model="showReviewDialog" @hide="closeDialog">
+         <q-card>
+           <q-card-section class="q-pb-sm">
+-            <div class="text-body1">我的评论</div>
++            <div class="text-body1">My Review</div>
+           </q-card-section>
+ 
+           <q-card-section class="q-pt-none">
+@@ -27,11 +27,11 @@
+               color="white"
+               text-color="primary"
+               :options="[
+-                {label: '想听', value: 'marked'},
+-                {label: '在听', value: 'listening'},
+-                {label: '听过', value: 'listened'},
+-                {label: '重听', value: 'replay'},
+-                {label: '搁置', value: 'postponed'}
++                { label: 'Plan to Listen', value: 'marked' },
++                { label: 'Listening', value: 'listening' },
++                { label: 'Completed', value: 'listened' },
++                { label: 'Replaying', value: 'replay' },
++                { label: 'Postponed', value: 'postponed' }
+               ]"
+             />
+           </q-card-section>
+@@ -48,12 +48,12 @@
+           
+           <div class="row justify-between">
+             <q-card-actions  class="text-red">
+-              <q-btn flat label="删除标记" v-close-popup @click="deleteConfirm = true" />
++              <q-btn flat label="Delete" v-close-popup @click="deleteConfirm = true" />
+             </q-card-actions>
+ 
+             <q-card-actions align="right" class="text-primary">
+-              <q-btn flat label="确定" v-close-popup @click="submitReview()" />
+-              <q-btn flat label="取消" v-close-popup @click="closeDialog()" />
++              <q-btn flat label="Confirm" v-close-popup @click="submitReview()" />
++              <q-btn flat label="Cancel" v-close-popup @click="closeDialog()" />
+             </q-card-actions>
+           </div>
+         </q-card>
+@@ -62,12 +62,12 @@
+       <q-dialog v-model="deleteConfirm" persistent transition-show="scale" transition-hide="scale">
+         <q-card class="bg-teal text-white" style="width: 300px">
+           <q-card-section>
+-            <div class="text-h6">确定要删除标记吗</div>
++            <div class="text-h6">Are you sure?</div>
+           </q-card-section>
+ 
+           <q-card-actions align="right" class="bg-white text-teal">
+-              <q-btn flat label="确定" v-close-popup @click="deleteReview()" />
+-              <q-btn flat label="取消" v-close-popup @click="closeDialog()"/>
++              <q-btn flat label="Confirm" v-close-popup @click="deleteReview()" />
++              <q-btn flat label="Cancel" v-close-popup @click="closeDialog()"/>
+           </q-card-actions>
+         </q-card>
+       </q-dialog>
+diff --git a/src/layouts/DashboardLayout.vue b/src/layouts/DashboardLayout.vue
+index b37147b..11e0d87 100644
+--- a/src/layouts/DashboardLayout.vue
++++ b/src/layouts/DashboardLayout.vue
+@@ -3,7 +3,7 @@
+     <q-header elevated class="bg-black">
+       <q-toolbar>
+         <q-btn flat @click="drawer = !drawer" round dense icon="menu" />
+-        <q-toolbar-title>仪表盘</q-toolbar-title>
++        <q-toolbar-title>Dashboard</q-toolbar-title>
+       </q-toolbar>
+     </q-header>
+ 
+@@ -63,28 +63,28 @@ export default {
+       miniState: true,
+       links: [
+         {
+-          title: '音声库',
++          title: 'Folders',
+           icon: 'folder',
+           path: '/admin'
+         },
+         {
+-          title: '扫描',
++          title: 'Scanner',
+           icon: 'youtube_searched_for',
+           path: '/admin/scanner'
+         },
+         {
+-          title: '用户管理',
++          title: 'Users',
+           icon: 'person',
+           path: '/admin/usermanage'
+         },
+         {
+-          title: '高级设置',
++          title: 'Advanced',
+           icon: 'settings',
+           path: '/admin/advanced'
+         },
+ 
+         {
+-          title: '回到主页',
++          title: 'Back Home',
+           icon: 'home',
+           path: '/'
+         }
+diff --git a/src/layouts/MainLayout.vue b/src/layouts/MainLayout.vue
+index 8a0bd36..5f811e4 100644
+--- a/src/layouts/MainLayout.vue
++++ b/src/layouts/MainLayout.vue
+@@ -87,7 +87,7 @@
+ 
+             <q-item-section>
+               <q-item-label class="text-subtitle1">
+-                随心听
++                Random Play
+               </q-item-label>
+             </q-item-section>
+           </q-item>
+@@ -99,7 +99,7 @@
+ 
+             <q-item-section>
+               <q-item-label class="text-subtitle1">
+-                睡眠模式
++                Sleep Mode
+               </q-item-label>
+             </q-item-section>
+           </q-item>
+@@ -115,10 +115,10 @@
+ 
+             <q-item-section>
+               <q-item-label class="text-subtitle1">
+-                深色模式
++                Dark Mode
+               </q-item-label>
+               <q-item-label class="text-caption text-grey">
+-                {{ $q.dark.mode === 'auto' ? '跟随系统' : $q.dark.mode === true ? '已开启' : '已禁用' }}
++                {{ $q.dark.mode === 'auto' ? 'Follow System' : $q.dark.mode === true ? 'Enabled' : 'Disabled' }}
+               </q-item-label>
+             </q-item-section>
+           </q-item>
+@@ -130,7 +130,7 @@
+ 
+             <q-item-section>
+               <q-item-label class="text-subtitle1">
+-                设置
++                Settings
+               </q-item-label>
+             </q-item-section>
+           </q-item>
+@@ -149,7 +149,7 @@
+ 
+             <q-item-section>
+               <q-item-label class="text-subtitle1">
+-                管理面板
++                Admin Panel
+               </q-item-label>
+             </q-item-section>
+           </q-item>
+@@ -168,7 +168,7 @@
+ 
+             <q-item-section>
+               <q-item-label class="text-subtitle1">
+-                登出
++                Logout
+               </q-item-label>
+               <q-item-label caption lines="2">{{ userName }}</q-item-label>
+             </q-item-section>
+@@ -181,12 +181,12 @@
+       <q-card>
+         <q-card-section class="row items-center">
+           <q-avatar icon="power_settings_new" color="primary" text-color="white" />
+-          <span class="q-ml-sm">是否退出登录？（若未开启用户验证，则操作无效）</span>
++          <span class="q-ml-sm">Are you sure you want to log out?</span>
+         </q-card-section>
+ 
+         <q-card-actions align="right">
+-          <q-btn flat label="取消" color="primary" v-close-popup />
+-          <q-btn flat label="退出" color="primary" @click="logout()" v-close-popup />
++          <q-btn flat label="Cancel" color="primary" v-close-popup />
++          <q-btn flat label="Log out" color="primary" @click="logout()" v-close-popup />
+         </q-card-actions>
+       </q-card>
+     </q-dialog>
+@@ -241,11 +241,11 @@ export default {
+       randId: null,
+       showTimer: false,
+       links: [
+-        { title: '媒体库', icon: 'widgets', path: '/' },
+-        { title: '我的收藏', icon: 'favorite', path: '/favourites' },
+-        { title: '社团', icon: 'group', path: '/circles' },
+-        { title: '标签', icon: 'label', path: '/tags' },
+-        { title: '声优', icon: 'mic', path: '/vas' }
++        { title: 'Library', icon: 'widgets', path: '/' },
++        { title: 'My Favourites', icon: 'favorite', path: '/favourites' },
++        { title: 'Circles', icon: 'group', path: '/circles' },
++        { title: 'Tags', icon: 'label', path: '/tags' },
++        { title: 'VAs', icon: 'mic', path: '/vas' }
+       ],
+       sharedConfig: {}
+     };
+@@ -329,15 +329,15 @@ export default {
+         .then(res => {
+           if (res.data.update_available && res.data.notifyUser) {
+             this.$q.notify({
+-              message: 'GitHub上有新版本',
++              message: 'A new version is available on GitHub (this links to a different fork)',
+               color: 'primary',
+               textColor: 'white',
+               icon: 'cloud_download',
+               timeout: 5000,
+               actions: [
+-                { label: '好', color: 'white' },
++                { label: 'OK', color: 'white' },
+                 {
+-                  label: '查看',
++                  label: 'View',
+                   color: 'white',
+                   handler: () => {
+                     Object.assign(document.createElement('a'), {
+@@ -356,8 +356,8 @@ export default {
+               type: 'warning',
+               timeout: 60000,
+               actions: [
+-                { label: '以后提醒我', color: 'black' },
+-                { label: '前往扫描页', color: 'black', handler: () => this.$router.push('/admin/scanner') }
++                { label: 'Remind me later', color: 'black' },
++                { label: 'Open scanner page', color: 'black', handler: () => this.$router.push('/admin/scanner') }
+               ]
+             });
+           }
+@@ -437,13 +437,13 @@ export default {
+     onAddSearchKeyword() {
+       const keyword = this.editKeyword.trim();
+       if (keyword === '') {
+-        this.showErrNotif('无法添加空白的关键字');
++        this.showErrNotif('Cannot add blank keyword');
+         return;
+       }
+ 
+       for (let kw of this.keywords) {
+         if (kw === keyword) {
+-          this.showErrNotif('关键字重复，添加失败');
++          this.showErrNotif('Duplicate keyword, failed to add');
+           return;
+         }
+       }
+diff --git a/src/pages/Dashboard/Advanced.vue b/src/pages/Dashboard/Advanced.vue
+index 5edc0de..42ebd09 100644
+--- a/src/pages/Dashboard/Advanced.vue
++++ b/src/pages/Dashboard/Advanced.vue
+@@ -2,29 +2,29 @@
+   <q-form @submit="onSubmit">
+     <q-card class="q-ma-md">
+       <q-toolbar>
+-        <q-toolbar-title>爬虫相关设置</q-toolbar-title>
++        <q-toolbar-title>Crawler settings</q-toolbar-title>
+       </q-toolbar>
+ 
+       <q-list>
+         <q-item style="height: 70px;">
+           <q-item-section>
+-            <q-item-label>标签语言</q-item-label>
+-            <q-item-label caption>从 DLSite 爬取的标签元数据的语言</q-item-label>
++            <q-item-label>Tag Language</q-item-label>
++            <q-item-label caption>The language of tag metadata from DLsite</q-item-label>
+           </q-item-section>
+ 
+           <q-item-section avatar>
+             <div class="q-gutter-sm">
+-              <q-radio dense v-model="config.tagLanguage" val="zh-cn" label="简" />
+-              <q-radio dense v-model="config.tagLanguage" val="zh-tw" label="繁" />
+-              <q-radio dense v-model="config.tagLanguage" val="ja-jp" label="日" />
++              <q-radio dense v-model="config.tagLanguage" val="ja-jp" label="Japanese" />
++              <q-radio dense v-model="config.tagLanguage" val="zh-cn" label="Chinese (Simplified)" />
++              <q-radio dense v-model="config.tagLanguage" val="zh-tw" label="Chinese (Traditional)" />
+             </div>
+           </q-item-section>
+         </q-item>
+ 
+         <q-item>
+           <q-item-section>
+-            <q-item-label>DLsite 超时时间</q-item-label>
+-            <q-item-label caption>默认 10000 毫秒</q-item-label>
++            <q-item-label>DLsite timeout</q-item-label>
++            <q-item-label caption>Defaults is 10000 milliseconds</q-item-label>
+           </q-item-section>
+ 
+           <q-item-section avatar>
+@@ -39,8 +39,8 @@
+ 
+         <q-item>
+           <q-item-section>
+-            <q-item-label>HVDB 超时时间</q-item-label>
+-            <q-item-label caption>默认 10000 毫秒</q-item-label>
++            <q-item-label>HVDB timeout</q-item-label>
++            <q-item-label caption>Defaults to 10000 milliseconds</q-item-label>
+           </q-item-section>
+ 
+           <q-item-section avatar>
+@@ -55,8 +55,8 @@
+ 
+         <q-item>
+           <q-item-section>
+-            <q-item-label>重新请求间隔时间</q-item-label>
+-            <q-item-label caption>默认 2000 毫秒</q-item-label>
++            <q-item-label>Re-request interval</q-item-label>
++            <q-item-label caption>Defaults to 2000 milliseconds</q-item-label>
+           </q-item-section>
+ 
+           <q-item-section avatar>
+@@ -71,8 +71,8 @@
+ 
+         <q-item>
+           <q-item-section>
+-            <q-item-label>请求最大尝试次数</q-item-label>
+-            <q-item-label caption>默认 5</q-item-label>
++            <q-item-label>Maximum request attempts</q-item-label>
++            <q-item-label caption>Defaults to 5</q-item-label>
+           </q-item-section>
+ 
+           <q-item-section avatar>
+@@ -87,8 +87,8 @@
+ 
+         <q-item>
+           <q-item-section>
+-            <q-item-label>爬虫并行任务数量</q-item-label>
+-            <q-item-label caption>默认 16</q-item-label>
++            <q-item-label>Number of parallel crawler tasks</q-item-label>
++            <q-item-label caption>Defaults to 16</q-item-label>
+           </q-item-section>
+ 
+           <q-item-section avatar>
+@@ -103,8 +103,8 @@
+ 
+         <q-item>
+           <q-item-section>
+-            <q-item-label>HTTP 代理服务主机 IP</q-item-label>
+-            <q-item-label caption>此项为空时默认为本机</q-item-label>
++            <q-item-label>HTTP proxy server host IP</q-item-label>
++            <q-item-label caption>If this is empty no proxy is used</q-item-label>
+           </q-item-section>
+ 
+           <q-item-section avatar>
+@@ -118,8 +118,8 @@
+ 
+         <q-item>
+           <q-item-section>
+-            <q-item-label>HTTP 代理服务端口号 </q-item-label>
+-            <q-item-label caption>此项为 0 时默认不使用代理</q-item-label>
++            <q-item-label>HTTP proxy service port</q-item-label>
++            <q-item-label caption>When this option is set to 0 no proxy is used</q-item-label>
+           </q-item-section>
+ 
+           <q-item-section avatar>
+@@ -136,14 +136,14 @@
+ 
+     <q-card class="q-ma-md">
+       <q-toolbar>
+-        <q-toolbar-title>文件夹扫描相关设置</q-toolbar-title>
++        <q-toolbar-title>Folder scanning settings</q-toolbar-title>
+       </q-toolbar>
+ 
+       <q-list>
+         <q-item style="height: 70px;">
+           <q-item-section>
+-            <q-item-label>最大递归扫描深度</q-item-label>
+-            <q-item-label caption>默认 2</q-item-label>
++            <q-item-label>Maximum recursive scan depth</q-item-label>
++            <q-item-label caption>Defaults to 2</q-item-label>
+           </q-item-section>
+ 
+           <q-item-section avatar>
+@@ -157,8 +157,8 @@
+         </q-item>
+         <q-item>
+           <q-item-section>
+-            <q-item-label>扫描时跳过清理音声库</q-item-label>
+-            <q-item-label caption>是否跳过清理不存在的音声（不推荐，默认不跳过）</q-item-label>
++            <q-item-label>Skip cleaning library when scanning</q-item-label>
++            <q-item-label caption>Whether to skip cleaning non-existent sounds (not recommended, not skipped by default)</q-item-label>
+           </q-item-section>
+ 
+           <q-item-section side>
+@@ -170,15 +170,15 @@
+ 
+     <q-card class="q-ma-md">
+       <q-toolbar>
+-        <q-toolbar-title>Web 服务器相关设置</q-toolbar-title>
+-        <div class="q-pr-xs">更改此设置需要重启程序</div>
++        <q-toolbar-title>Web server settings</q-toolbar-title>
++        <div class="q-pr-xs">Changing these settings requires restarting the program</div>
+       </q-toolbar>
+ 
+       <q-list>
+         <q-item style="height: 70px;">
+           <q-item-section>
+-            <q-item-label>用户验证</q-item-label>
+-            <q-item-label caption>是否启用用户验证（生产环境下无法修改此设置）</q-item-label>
++            <q-item-label>User Authentication</q-item-label>
++            <q-item-label caption>Whether to enable user authentication (this setting cannot be modified in a production environment)</q-item-label>
+           </q-item-section>
+ 
+           <q-item-section avatar>
+@@ -188,8 +188,8 @@
+ 
+         <q-item>
+           <q-item-section>
+-            <q-item-label>启用Gzip</q-item-label>
+-            <q-item-label caption>对网络传输启用Gzip压缩</q-item-label>
++            <q-item-label>Enable Gzip</q-item-label>
++            <q-item-label caption>Enable Gzip compression for network transfers</q-item-label>
+           </q-item-section>
+ 
+           <q-item-section avatar>
+@@ -199,8 +199,8 @@
+ 
+         <q-item>
+           <q-item-section>
+-            <q-item-label>设置端口号</q-item-label>
+-            <q-item-label caption>服务器监听端口号</q-item-label>
++            <q-item-label>Port number</q-item-label>
++            <q-item-label caption>Server listening port number</q-item-label>
+           </q-item-section>
+ 
+           <q-item-section avatar>
+@@ -215,8 +215,8 @@
+ 
+         <q-item>
+           <q-item-section>
+-            <q-item-label>屏蔽远程连接</q-item-label>
+-            <q-item-label caption>只允许本地访问，默认为false。更改此设置需要重启程序</q-item-label>
++            <q-item-label>Block remote connections</q-item-label>
++            <q-item-label caption>Allow only local access. Defaults to false. Changing this setting requires restarting the program.</q-item-label>
+           </q-item-section>
+ 
+           <q-item-section avatar>
+@@ -226,8 +226,8 @@
+ 
+         <q-item>
+           <q-item-section>
+-            <q-item-label>token 过期时间</q-item-label>
+-            <q-item-label caption>默认 2592000 秒</q-item-label>
++            <q-item-label>Token expiration time</q-item-label>
++            <q-item-label caption>Defaults to 2592000 seconds</q-item-label>
+           </q-item-section>
+ 
+           <q-item-section avatar>
+@@ -244,14 +244,14 @@
+ 
+     <q-card class="q-ma-md">
+       <q-toolbar>
+-        <q-toolbar-title>安全设置</q-toolbar-title>
++        <q-toolbar-title>Security settings</q-toolbar-title>
+       </q-toolbar>
+ 
+       <q-list>
+         <q-item style="height: 70px;">
+           <q-item-section>
+-            <q-item-label>生产环境</q-item-label>
+-            <q-item-label caption>此设置无法在网页端修改，详情请查阅GitHub Wiki中关于配置文件的说明</q-item-label>
++            <q-item-label>Production environment</q-item-label>
++            <q-item-label caption>This setting cannot be modified on the web page. For more information, please refer to the configuration file description in the GitHub Wiki.</q-item-label>
+           </q-item-section>
+ 
+           <q-item-section avatar>
+@@ -263,14 +263,14 @@
+ 
+     <q-card class="q-ma-md">
+       <q-toolbar>
+-        <q-toolbar-title>其它设置</q-toolbar-title>
++        <q-toolbar-title>Other settings</q-toolbar-title>
+       </q-toolbar>
+ 
+       <q-list>
+         <q-item style="height: 70px;">
+           <q-item-section>
+-            <q-item-label>检查更新</q-item-label>
+-            <q-item-label caption>打开网页时是否检查更新</q-item-label>
++            <q-item-label>Check for updates</q-item-label>
++            <q-item-label caption>Check for updates when opening a page</q-item-label>
+           </q-item-section>
+ 
+           <q-item-section avatar>
+@@ -280,8 +280,8 @@
+ 
+         <q-item v-if="config.checkUpdate">
+           <q-item-section>
+-            <q-item-label>检查测试版更新</q-item-label>
+-            <q-item-label caption>是否检查测试版更新</q-item-label>
++            <q-item-label>Check for beta updates</q-item-label>
++            <q-item-label caption>Check for beta updates</q-item-label>
+           </q-item-section>
+ 
+           <q-item-section avatar>
+@@ -291,8 +291,8 @@
+ 
+         <q-item>
+           <q-item-section>
+-            <q-item-label>数据库使用默认路径</q-item-label>
+-            <q-item-label caption>使用程序所在位置下的sqlite文件夹，并忽略databaseFolderDir设置（如无必要请勿修改，更改此设置需要重启程序）</q-item-label>
++            <q-item-label>Use default path for database</q-item-label>
++            <q-item-label caption>Use the sqlite folder under the program's location and ignore the databaseFolderDir setting (do not modify this unless necessary; changing this setting requires restarting the program)</q-item-label>
+           </q-item-section>
+ 
+           <q-item-section avatar>
+@@ -302,8 +302,8 @@
+ 
+         <q-item>
+           <q-item-section>
+-            <q-item-label>封面使用默认路径</q-item-label>
+-            <q-item-label caption>使用程序所在位置下的covers文件夹，并忽略封面文件夹路径设置</q-item-label>
++            <q-item-label>Use default path for covers</q-item-label>
++            <q-item-label caption>Use the covers folder under the program location and ignore the cover folder path setting</q-item-label>
+           </q-item-section>
+ 
+           <q-item-section avatar>
+@@ -314,7 +314,7 @@
+     </q-card>
+ 
+     <div class="q-ma-lg row justify-end">
+-      <q-btn :loading="loading" label="保存" type="submit" color="primary" />
++      <q-btn :loading="loading" label="Confirm" type="submit" color="primary" />
+     </div>
+   </q-form>
+ </template>
+diff --git a/src/pages/Dashboard/Folders.vue b/src/pages/Dashboard/Folders.vue
+index 1ddda8a..ec101b7 100644
+--- a/src/pages/Dashboard/Folders.vue
++++ b/src/pages/Dashboard/Folders.vue
+@@ -3,7 +3,7 @@
+     <q-card class="q-ma-md">
+       <q-form @submit="onSubmitRootFolder">
+         <q-toolbar>
+-          <q-toolbar-title>添加新文件夹</q-toolbar-title>
++          <q-toolbar-title>Add a new folder</q-toolbar-title>
+         </q-toolbar>
+ 
+         <div class="q-pa-sm">
+@@ -13,8 +13,8 @@
+             v-model="rootFolder.name"
+             required
+             lazy-rules
+-            :rules="[val => !config.rootFolders.find(rootFolder => rootFolder.name === val) || '该别名已存在，文件夹别名不能重复']"
+-            label="文件夹别名"
++            :rules="[val => !config.rootFolders.find(rootFolder => rootFolder.name === val) || 'This name is already in use, please use a different name.']"
++            label="Folder name"
+           />
+ 
+           <q-input
+@@ -23,12 +23,12 @@
+             v-model="rootFolder.path"
+             required
+             lazy-rules
+-            :rules="[val => !config.rootFolders.find(rootFolder => rootFolder.path === val) || '该路径已存在，文件夹路径不能重复']"
+-            label="绝对路径"
++            :rules="[val => !config.rootFolders.find(rootFolder => rootFolder.path === val) || 'This path is already in use, please use a different name.']"
++            label="Path"
+           />
+ 
+           <div class="row justify-end">
+-            <q-btn type="submit" color="primary" label="添加" />
++            <q-btn type="submit" color="primary" label="Add" />
+           </div>
+         </div>
+       </q-form>
+@@ -37,7 +37,7 @@
+     <q-form @submit="onSubmit">
+       <q-card class="q-ma-md" v-show="config.rootFolders.length">
+         <q-toolbar>
+-          <q-toolbar-title>文件夹列表</q-toolbar-title>
++          <q-toolbar-title>Folder List</q-toolbar-title>
+         </q-toolbar>
+ 
+         <q-list>
+@@ -60,15 +60,15 @@
+ 
+       <q-card class="q-ma-md">
+         <q-toolbar>
+-          <q-toolbar-title>封面文件夹路径</q-toolbar-title>
++          <q-toolbar-title>Cover folder path</q-toolbar-title>
+         </q-toolbar>
+ 
+-        <div v-if="config.coverUseDefaultPath" class="q-pa-md">已指定为默认路径，即程序所在位置下的covers文件夹。如需修改，请前往高级设置并取消“封面使用默认路径”。</div>
++        <div v-if="config.coverUseDefaultPath" class="q-pa-md">The path is set to the default covers folder under the program's location. To change this, go to Advanced Settings and uncheck "Use default path for covers".</div>
+         <q-input v-else outlined dense required v-model="config.coverFolderDir" class="q-pa-sm" />
+       </q-card>
+ 
+       <div class="q-ma-lg row justify-end">
+-        <q-btn :loading="loading" label="保存" type="submit" color="primary" />
++        <q-btn :loading="loading" label="Save" type="submit" color="primary" />
+       </div>
+     </q-form>
+   </div>
+diff --git a/src/pages/Dashboard/Scanner.vue b/src/pages/Dashboard/Scanner.vue
+index c462b95..ccdf9df 100644
+--- a/src/pages/Dashboard/Scanner.vue
++++ b/src/pages/Dashboard/Scanner.vue
+@@ -2,22 +2,22 @@
+   <div>
+     <div class="row q-ma-sm">
+       <div class="col-xs-6 col-sm-4 row q-pa-sm">
+-        <q-btn class="col" color="teal" label="扫描本地音声库"
++        <q-btn class="col" color="teal" label="Scan local files"
+           :disable="state === 'running' || !(loggedIn || $socket.connected)" @click="performScan()" />
+       </div>
+ 
+       <div class="col-xs-6 col-sm-4 row q-pa-sm">
+-        <q-btn class="col" color="primary" label="刷新音声库信息"
++        <q-btn class="col" color="primary" label="Update audio information"
+           :disable="state === 'running' || !(loggedIn || $socket.connected)" @click="performUpdate()" />
+       </div>
+ 
+       <div class="col-xs-6 col-sm-4 row q-pa-sm">
+-        <q-btn class="col" color="amber" label="扫描本地文件变化"
++        <q-btn class="col" color="amber" label="Scan local file changes"
+           :disable="state === 'running' || !(loggedIn || $socket.connected)" @click="performModify()" />
+       </div>
+ 
+       <div class="col-xs-12 col-sm-12 row q-pa-sm">
+-        <q-btn class="col" color="negative" label="终止扫描进程"
++        <q-btn class="col" color="negative" label="Stop running scan"
+           :disable="state !== 'running' || !(loggedIn || $socket.connected)" @click="killScanProceess()" />
+       </div>
+     </div>
+@@ -50,10 +50,10 @@
+     <q-card v-show="(tasks.length > 0) || (failedTasks.length > 0)" class="q-ma-md">
+       <q-tabs v-model="tab" dense inline-label class="text-grey" active-color="white" active-bg-color="brown"
+         indicator-color="yellow" align="justify" narrow-indicator>
+-        <q-tab name="tasks" icon="hourglass_full" label="处理中">
++        <q-tab name="tasks" icon="hourglass_full" label="In Progress">
+           <q-badge v-show="tasks.length > 0" color="primary" floating>{{ tasks.length }}</q-badge>
+         </q-tab>
+-        <q-tab name="failedTasks" icon="error_outline" label="处理失败">
++        <q-tab name="failedTasks" icon="error_outline" label="Failed">
+           <q-badge v-show="failedTasks.length > 0" color="red" floating>{{ failedTasks.length }}</q-badge>
+         </q-tab>
+       </q-tabs>
+@@ -220,11 +220,11 @@ export default {
+     allLogs() {
+       const resultLogs = this.results.map(res => {
+         if (res.result === 'added') {
+-          return { level: 'info', message: `[RJ${res.rjcode}] 添加成功! Added: ${res.count}` }
++          return { level: 'info', message: `[RJ${res.rjcode}] Added successfully! Added: ${res.count}` }
+         } else if (res.result === 'updated') {
+-          return { level: 'info', message: `[RJ${res.rjcode}] 更新成功! Updated: ${res.count}` }
++          return { level: 'info', message: `[RJ${res.rjcode}] Updated successful! Updated: ${res.count}` }
+         } else {
+-          return { level: 'error', message: `[RJ${res.rjcode}] 处理失败! Failed: ${res.count}` }
++          return { level: 'error', message: `[RJ${res.rjcode}] Processing failed! Failed: ${res.count}` }
+         }
+       })
+       return this.mainLogs.concat(resultLogs)
+@@ -234,7 +234,7 @@ export default {
+   mounted() {
+     this.$socket.emit('ON_SCANNER_PAGE')
+     this.$socket.on('connect_error', () => {
+-      this.showErrNotif('连接Socket失败')
++      this.showErrNotif('Socket connection failed')
+     });
+   },
+ }
+diff --git a/src/pages/Dashboard/UserManage.vue b/src/pages/Dashboard/UserManage.vue
+index 7a5d218..0acf207 100644
+--- a/src/pages/Dashboard/UserManage.vue
++++ b/src/pages/Dashboard/UserManage.vue
+@@ -3,27 +3,27 @@
+     <q-card class="q-ma-md">
+       <q-form @submit="updateAdminPassword()">
+         <q-toolbar>
+-          <q-toolbar-title>修改管理员密码</q-toolbar-title>
++          <q-toolbar-title>Change admin password</q-toolbar-title>
+         </q-toolbar>
+ 
+         <div class="q-pa-sm">
+-          <q-input outlined dense type="password" label="新密码"
++          <q-input outlined dense type="password" label="New Password"
+             v-model="adminNewPassword"
+             lazy-rules
+-            :rules="[ val => val.length >= 5 || '密码长度至少为 5' ]"
++            :rules="[ val => val.length >= 5 || 'Must be at least 5 characters' ]"
+           />
+ 
+-          <q-input outlined dense type="password" label="确认密码"
++          <q-input outlined dense type="password" label="Repeat New Password"
+             v-model="adminConfirmPassword"
+             lazy-rules
+             :rules="[
+-              val => val.length >= 5 || '密码长度至少为 5',
+-              val => val === adminNewPassword || '两次密码输入不一致'
++              val => val.length >= 5 || 'Must be at least 5 characters',
++              val => val === adminNewPassword || 'Passwords do not match'
+             ]"
+           />
+ 
+           <div class="row justify-end">
+-            <q-btn :loading="loadingUpdateAdminPassword" type="submit" color="primary" label="修改" />
++            <q-btn :loading="loadingUpdateAdminPassword" type="submit" color="primary" label="Update" />
+           </div>
+         </div>
+       </q-form>
+@@ -32,30 +32,30 @@
+     <q-card class="q-ma-md">
+       <q-form @submit="addNewUser()">
+         <q-toolbar>
+-          <q-toolbar-title>添加新用户</q-toolbar-title>
++          <q-toolbar-title>Add a new user</q-toolbar-title>
+         </q-toolbar>
+ 
+         <div class="q-pa-sm">
+-          <q-select dense outlined label="用户组" v-model="newuser.group" :options="groups" class="q-mb-md" />
++          <q-select dense outlined label="User Group" v-model="newuser.group" :options="groups" class="q-mb-md" />
+ 
+           <q-input outlined dense
+-            v-model="newuser.name" label="用户名"
++            v-model="newuser.name" label="Username"
+             required
+             lazy-rules
+             :rules="[
+-                val => val.length >= 5 || '用户名长度至少为 5',
+-                val => !users.find(user => user.name === val) || '该名称已存在，用户名不能重复',
++                val => val.length >= 5 || 'Must be at least 5 characters',
++                val => !users.find(user => user.name === val) || 'This name is already in use',
+               ]" 
+           />
+ 
+-          <q-input outlined dense label="密码"
++          <q-input outlined dense label="Password"
+             v-model="newuser.password"
+             lazy-rules
+-            :rules="[ val => val.length >= 5 || '密码长度至少为 5' ]"
++            :rules="[ val => val.length >= 5 || 'Must be at least 5 characters' ]"
+           />
+ 
+           <div class="row justify-end">
+-            <q-btn :loading="loadingAddNewUser" type="submit" color="primary" label="添加" />
++            <q-btn :loading="loadingAddNewUser" type="submit" color="primary" label="Create" />
+           </div>
+         </div>
+       </q-form>
+@@ -63,7 +63,7 @@
+ 
+     <q-card class="q-ma-md q-pa-sm">
+       <q-table
+-        title="所有用户"
++        title="All users"
+         :data="users"
+         :columns="columns"
+         row-key="name"
+@@ -72,19 +72,19 @@
+         :selected.sync="selected"
+       />
+       <div class="row justify-end">
+-        <q-btn :loading="loadingDeleteUsers" :disable="selected.length === 0" @click="confirm = true" color="primary" label="删除" />
++        <q-btn :loading="loadingDeleteUsers" :disable="selected.length === 0" @click="confirm = true" color="primary" label="Delete" />
+       </div>
+     </q-card>
+ 
+     <q-dialog v-model="confirm" persistent>
+       <q-card>
+         <q-card-section class="row items-center">
+-          <span class="q-ma-sm text-h6">确认删除选中用户？</span>
++          <span class="q-ma-sm text-h6">Are you sure you want to delete this user?</span>
+         </q-card-section>
+ 
+         <q-card-actions align="right">
+-          <q-btn flat label="取消" color="primary" v-close-popup />
+-          <q-btn flat label="确认" color="primary" @click="deleteUsers()" v-close-popup />
++          <q-btn flat label="Cancel" color="primary" v-close-popup />
++          <q-btn flat label="Confirm" color="primary" @click="deleteUsers()" v-close-popup />
+         </q-card-actions>
+       </q-card>
+     </q-dialog>
+@@ -101,8 +101,8 @@ export default {
+     return {
+       selected: [],
+       columns: [
+-        { name: 'desc', required: true, label: '用户名', align: 'left', field: 'name', sortable: true },
+-        { name: 'calories', required: true, label: '用户组', align: 'center', field: 'group', sortable: true },
++        { name: 'desc', required: true, label: 'Username', align: 'left', field: 'name', sortable: true },
++        { name: 'calories', required: true, label: 'User Group', align: 'center', field: 'group', sortable: true },
+       ],
+       users: [],
+       loadingDeleteUsers: false,
+diff --git a/src/pages/Favourites.vue b/src/pages/Favourites.vue
+index bf34ab1..d7a8e4f 100644
+--- a/src/pages/Favourites.vue
++++ b/src/pages/Favourites.vue
+@@ -4,9 +4,9 @@
+       <div class="col-lg-3 col-sm-12 col-xs-12">
+         <q-btn-toggle v-model="mode" @input="changeMode" spread no-caps rounded toggle-color="primary" class="text-bold"
+           :class="{ 'bg-black': $q.dark.isActive }" :options="[
+-            { label: '我的评价', value: 'review' },
+-            { label: '我的进度', value: 'progress' },
+-            { label: '分类整理', value: 'folder' }
++            { label: 'Reviews', value: 'review' },
++            { label: 'Progress', value: 'progress' },
++            { label: 'Folder', value: 'folder' }
+           ]" />
+       </div>
+       <div class="col-auto gt-sm row">
+@@ -21,18 +21,18 @@
+     <div class="q-pt-md q-px-sm">
+       <q-btn-toggle v-if="mode === 'progress'" v-model="progressFilter" @input="changeProgressFilter"
+         toggle-color="primary" rounded :class="{ 'bg-black': $q.dark.isActive }" :options="[
+-          { label: '想听', value: 'marked' },
+-          { label: '在听', value: 'listening' },
+-          { label: '听过', value: 'listened' },
+-          { label: '重听', value: 'replay' },
+-          { label: '搁置', value: 'postponed' }
++          { label: 'Plan to Listen', value: 'marked' },
++          { label: 'Listening', value: 'listening' },
++          { label: 'Completed', value: 'listened' },
++          { label: 'Replaying', value: 'replay' },
++          { label: 'Postponed', value: 'postponed' }
+         ]" />
+     </div>
+ 
+     <div class="q-pt-md">
+       <div class="q-px-sm q-py-md">
+         <q-infinite-scroll @load="onLoad" :offset="500" :disable="stopLoad" ref="scroll" v-if="mode !== 'folder'">
+-          <div class="row justify-center text-grey" v-if="works.length === 0">在作品界面上点击星标、标记进度，标记的音声就会出现在这里啦</div>
++          <div class="row justify-center text-grey" v-if="works.length === 0">Rate or mark progress on a work to have it appear here</div>
+           <q-list bordered separator class="shadow-2" v-if="works.length">
+             <FavListItem v-for="work in works" :key="work.id" :workid="work.id" :metadata="work" @reset="reset()"
+               :mode="mode"></FavListItem>
+@@ -44,7 +44,7 @@
+           </template>
+         </q-infinite-scroll>
+ 
+-        <div v-else class="row justify-center text-grey">尚未实现，敬请期待</div>
++        <div v-else class="row justify-center text-grey">This tab was meant to do something, but it was never implemented</div>
+       </div>
+     </div>
+   </q-page>
+@@ -93,36 +93,36 @@ export default {
+       pagination: { currentPage: 0, pageSize: 12, totalCount: 0 },
+       sortMode: 'desc',
+       sortBy: {
+-        label: '标记时间',
++        label: 'Favourited Time',
+         order: 'updated_at'
+       },
+       sortOptions: [
+         {
+-          label: '标记时间',
++          label: 'Favourited Time',
+           order: 'updated_at'
+         },
+         {
+-          label: '评价',
++          label: 'Rating',
+           order: 'userRating'
+         },
+         {
+-          label: '发布时间',
++          label: 'Release Date',
+           order: 'release'
+         },
+         {
+-          label: '评论数量',
++          label: 'Review Count',
+           order: 'review_count'
+         },
+         {
+-          label: '售出数量',
++          label: 'Sales Count',
+           order: 'dl_count'
+         },
+         {
+-          label: '全年龄新作',
++          label: 'SFW',
+           order: 'allage'
+         },
+         {
+-          label: '18禁新作',
++          label: 'NSFW',
+           order: 'nsfw'
+         }
+       ]
+diff --git a/src/pages/Login.vue b/src/pages/Login.vue
+index 93cdc4d..2716abc 100644
+--- a/src/pages/Login.vue
++++ b/src/pages/Login.vue
+@@ -1,16 +1,16 @@
+ <template>
+   <q-form @submit="onSubmit" style="width: 260px;" class="absolute-center	q-gutter-md">
+-    <q-input filled v-model="name" label="用户名" class="fit"
++    <q-input filled v-model="name" label="Username" class="fit"
+       lazy-rules
+-      :rules="[ val => val.length >= 5 || '密码长度至少为 5' ]"
++      :rules="[ val => val.length >= 5 || 'Must be at least 5 characters' ]"
+     />
+     
+-    <q-input filled type="password" v-model="password" label="密码"  class="fit"
++    <q-input filled type="password" v-model="password" label="Password"  class="fit"
+       lazy-rules
+-      :rules="[ val => val.length >= 5 || '密码长度至少为 5' ]"
++      :rules="[ val => val.length >= 5 || 'Must be at least 5 characters' ]"
+     />
+ 
+-    <q-btn label="登录" type="submit" color="primary" class="fit" />
++    <q-btn label="Log in" type="submit" color="primary" class="fit" />
+   </q-form>
+ </template>
+    
+@@ -38,7 +38,7 @@ export default {
+           try {
+             this.$q.localStorage.set('jwt-token', res.data.token)
+             setAxiosHeaders(res.data.token)
+-            this.showSuccNotif('登录成功.')
++            this.showSuccNotif('Login successful')
+             this.$router.push('/')
+           } catch (error) {
+             // 由于Web Storage API错误，
+diff --git a/src/pages/Settings.vue b/src/pages/Settings.vue
+index b5f65d9..a47f5af 100644
+--- a/src/pages/Settings.vue
++++ b/src/pages/Settings.vue
+@@ -1,7 +1,7 @@
+ <template>
+   <div class="q-pa-md q-gutter-md flex-center" style="max-width: 700px; margin: auto;">
+     <q-toolbar>
+-      <q-toolbar-title>通用设置</q-toolbar-title>
++      <q-toolbar-title>General settings</q-toolbar-title>
+     </q-toolbar>
+     <q-card class="q-py-none">
+       <q-list separator>
+@@ -11,8 +11,8 @@
+             <q-icon size="md" name="library_music" />
+           </q-item-section>
+           <q-item-section main>
+-            <q-item-label>作品显示数量</q-item-label>
+-            <q-item-label class="text-caption text-grey">输入整数回车后生效</q-item-label>
++            <q-item-label>Number of works per page</q-item-label>
++            <q-item-label class="text-caption text-grey">Enter a number and press enter to update</q-item-label>
+           </q-item-section>
+           <q-item-section side>
+             <q-input input-class="text-right" type="number" v-model="pageSize" @keyup.enter="setPageSize" />
+@@ -22,7 +22,7 @@
+     </q-card>
+ 
+     <q-toolbar>
+-      <q-toolbar-title>播放设置</q-toolbar-title>
++      <q-toolbar-title>Player settings</q-toolbar-title>
+     </q-toolbar>
+     <q-card class="q-py-none">
+       <q-list separator>
+@@ -32,7 +32,7 @@
+             <q-icon size="md" name="fast_rewind" />
+           </q-item-section>
+           <q-item-section main>
+-            <q-item-label>倒带跳跃秒数</q-item-label>
++            <q-item-label>Rewind seek time</q-item-label>
+           </q-item-section>
+           <q-item-section side>
+             <q-select borderless v-model="rewindSeekTimeOption" :options="seekTimeOptions" @input="setRewindSeekTime" />
+@@ -44,7 +44,7 @@
+             <q-icon flat dense size="md" name="fast_forward" />
+           </q-item-section>
+           <q-item-section main>
+-            <q-item-label>前进跳跃秒数</q-item-label>
++            <q-item-label>Forward seek time</q-item-label>
+           </q-item-section>
+           <q-item-section side>
+             <q-select
+@@ -60,8 +60,8 @@
+             <q-icon flat dense size="md" name="image_search" />
+           </q-item-section>
+           <q-item-section main>
+-            <q-item-label>是否启用媒体查看器</q-item-label>
+-            <q-item-label class="text-caption text-grey">开启可能占用性能，仅查看图片/视频</q-item-label>
++            <q-item-label>Enable media viewer</q-item-label>
++            <q-item-label class="text-caption text-grey">Enabling this feature may reduce performance, please only view images/videos</q-item-label>
+           </q-item-section>
+           <q-item-section side>
+             <q-toggle borderless v-model="isViewer" @input="setIsViewer" />
+@@ -89,12 +89,12 @@ export default {
+       // 页面数量设置
+       pageSize: 12,
+       // 倒带、前进秒数设置
+-      rewindSeekTimeOption: { label: '5 秒', value: 5 },
+-      forwardSeekTimeOption: { label: '30 秒', value: 30 },
++      rewindSeekTimeOption: { label: '5 seconds', value: 5 },
++      forwardSeekTimeOption: { label: '30 seconds', value: 30 },
+       seekTimeOptions: [
+-        { label: '5 秒', value: 5 },
+-        { label: '10 秒', value: 10 },
+-        { label: '30 秒', value: 30 }
++        { label: '5 seconds', value: 5 },
++        { label: '10 seconds', value: 10 },
++        { label: '30 seconds', value: 30 }
+       ],
+       // 媒体查看器是否启用
+       isViewer: true
+diff --git a/src/pages/Works.vue b/src/pages/Works.vue
+index ff6ba70..ab80ba3 100644
+--- a/src/pages/Works.vue
++++ b/src/pages/Works.vue
+@@ -34,13 +34,13 @@
+             transition-hide="scale"
+             v-model="sortOption"
+             :options="sortOptions"
+-            label="排序"
++            label="Sort"
+             class="col-auto"
+             :bg-color="$q.dark.isActive ? 'black' : 'white'"
+           />
+ 
+           <!-- 是否包含字幕 -->
+-          <q-toggle v-model="lyricStatus" label="是否包含字幕" @input="onLyricStatusChange"></q-toggle>
++          <q-toggle v-model="lyricStatus" label="Require Subtitles" @input="onLyricStatusChange"></q-toggle>
+ 
+           <!-- 切换显示模式按钮 -->
+           <q-btn-toggle
+@@ -118,21 +118,21 @@ export default {
+       seed: 7, // random sort
+ 
+       // 排序标签按钮
+-      sortOption: { label: '最新收录', order: 'add_time', sort: 'desc' },
++      sortOption: { label: 'Newest', order: 'add_time', sort: 'desc' },
+       sortOptions: [
+-        { label: '最新收录', order: 'add_time', sort: 'desc' },
+-        { label: '发售日期倒序', order: 'release', sort: 'desc' },
+-        { label: '我的评价排序', order: 'rating', sort: 'desc' },
+-        { label: '发售日期顺序', order: 'release', sort: 'asc' },
+-        { label: '售出数量倒序', order: 'dl_count', sort: 'desc' },
+-        { label: '价格顺序', order: 'price', sort: 'asc' },
+-        { label: '价格倒序', order: 'price', sort: 'desc' },
+-        { label: '评价倒序', order: 'rate_average_2dp', sort: 'desc' },
+-        { label: '评论数量倒序', order: 'review_count', sort: 'desc' },
+-        { label: 'RJ号倒序', order: 'id', sort: 'desc' },
+-        { label: 'RJ号顺序', order: 'id', sort: 'asc' },
+-        { label: '全年龄顺序', order: 'nsfw', sort: 'asc' },
+-        { label: '随机排序', order: 'random', sort: 'desc' }
++        { label: 'Newest', order: 'add_time', sort: 'desc' },
++        { label: 'Release date descending', order: 'release', sort: 'desc' },
++        { label: 'My rating descending', order: 'rating', sort: 'desc' },
++        { label: 'Release date ascending', order: 'release', sort: 'asc' },
++        { label: 'Sales count descending', order: 'dl_count', sort: 'desc' },
++        { label: 'Price ascending', order: 'price', sort: 'asc' },
++        { label: 'Price descending', order: 'price', sort: 'desc' },
++        { label: 'Rating descending', order: 'rate_average_2dp', sort: 'desc' },
++        { label: 'Review count descending', order: 'review_count', sort: 'desc' },
++        { label: 'RJ code descending', order: 'id', sort: 'desc' },
++        { label: 'RJ code ascending', order: 'id', sort: 'asc' },
++        { label: 'SFW only', order: 'nsfw', sort: 'asc' },
++        { label: 'Random', order: 'random', sort: 'desc' }
+       ],
+       // 是否包含字幕
+       lyricStatus: false,
