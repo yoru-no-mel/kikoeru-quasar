@@ -15,6 +15,8 @@
 
 ## 安装依赖
 
+Need node.js version 14
+
 请先安装全局依赖的quasar，本项目使用的是基于vue 2.x的quasar 1.x-2.0版本。
 
 安装完成后请使用 `quasar -v` 测试是否输出quasar版本以检测安装是否成功
